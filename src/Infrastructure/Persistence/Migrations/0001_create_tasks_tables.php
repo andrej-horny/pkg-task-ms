@@ -23,6 +23,27 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // tasks
+        Schema::create($tablePrefix . 'tasks', function (Blueprint $table) use ($tablePrefix) {
+            $table->string('id', 26)->primary();
+            $table->dateTime('date')->nullable();
+            $table->string('title')->nullable();
+            $table->string('description')->nullable();
+            // $table->dateTime('deadline')->nullable();
+            // $table->foreignId('parent_id')
+            //     ->nullable()
+            //     ->comment('Parent ticket to handle ticket hierarchy.')
+            //     ->constrained($tablePrefix . 'tickets', 'id');
+            $table->string('group_id', 26)
+                ->nullable()
+                ->constrained($tablePrefix . 'task_groups', 'id');
+            // $table->string('state')
+            //     ->nullable()
+            //     ->comment("Current ticket state");
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**

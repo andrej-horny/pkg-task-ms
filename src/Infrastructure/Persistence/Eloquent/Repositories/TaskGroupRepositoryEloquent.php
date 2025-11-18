@@ -19,7 +19,7 @@ class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
         return $this->mapper->toDomain($model);
     }
 
-    public function find(string $id): ?TaskGroup
+    public function findById(string $id): ?TaskGroup
     {
         $model = EloquentTaskGroup::findOrFail($id);
 
