@@ -14,7 +14,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "andrej-horny/pkg-tasks": "dev-main"
+    },
     "extra": {
         "laravel": {
             "providers": [

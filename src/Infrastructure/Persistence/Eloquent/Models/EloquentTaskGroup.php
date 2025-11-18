@@ -1,6 +1,6 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Eloquent\Models;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +18,7 @@ class EloquentTaskGroup extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'id',
         'code',
         'title',
         'description',
@@ -26,7 +27,7 @@ class EloquentTaskGroup extends Model
 
     public function getTable()
     {
-        return config('pkg-task-ms.tasks_table_prefix') . 'task_groups';
+        return config('pkg-task-ms.table_prefix') . 'task_groups';
     }    
 
     // public function tasks(): HasMany
