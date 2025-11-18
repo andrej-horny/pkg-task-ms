@@ -20,7 +20,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Dpb\\Package\\TaskMS\\Providers\\TaskMSServiceProvider"
+                "Dpb\\Package\\TaskMS\\Providers\\TaskMSServiceProvider",
+                "Dpb\\Package\\TaskMS\\Providers\\RepositoryServiceProvider"
             ]
         }
     }

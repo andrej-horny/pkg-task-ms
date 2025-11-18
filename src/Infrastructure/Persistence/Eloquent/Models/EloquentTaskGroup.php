@@ -12,6 +12,9 @@ class EloquentTaskGroup extends Model
 {
     use SoftDeletes;
 
+    protected $keyType = 'string'; // Eloquent needs string keys
+    public $incrementing = false;  // ULID is not auto-increment
+
     /**
      * The attributes that are mass assignable.
      *
