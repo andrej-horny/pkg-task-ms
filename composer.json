@@ -1,0 +1,25 @@
+{
+    "name": "andrej-horny/pkg-task-ms",
+    "type": "package",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Dpb\\Package\\TaskMS\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Andrej",
+            "email": "horny.andrej@dpb.sk"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Dpb\\Package\\TaskMS\\Providers\\TaskMSServiceProvider"
+            ]
+        }
+    }
+}
