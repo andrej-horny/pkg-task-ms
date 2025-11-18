@@ -8,6 +8,6 @@ use Illuminate\Support\Str;
 class LaravelIdGenerator
 {
     public function generate() : string {
-        return (string) Str::uuid();
+        return (string) Str::ulid();
     }
 }
