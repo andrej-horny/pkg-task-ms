@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EloquentTask extends Model
@@ -25,6 +26,10 @@ class EloquentTask extends Model
         'title',
         'description',
         'group_id',
+        'subject_id',
+        'subject_type',
+        'assigned_to_id',
+        'assigned_to_type',
     ];
 
     public function getTable()
@@ -41,4 +46,14 @@ class EloquentTask extends Model
     {
         return $this->belongsTo(EloquentTaskGroup::class, "group_id");
     }     
+
+    public function subject(): MorphTo
+    {
+        return $this->morphTo();
+    }    
+
+    public function assignedTo(): MorphTo
+    {
+        return $this->morphTo();
+    }       
 }

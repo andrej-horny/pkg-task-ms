@@ -1,28 +1,28 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Fleet;
 
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\EloquentTaskGroup;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\TaskGroupMapper;
-use Dpb\Package\Tasks\Entities\TaskGroup;
-use Dpb\Package\Tasks\Repositories\TaskGroupRepositoryInterface;
+use Dpb\Package\Fleet\Entities\MaintenanceGroup;
+use Dpb\Package\Fleet\Repositories\MaintenanceGroupRepositoryInterface;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Fleet\MaintenanceGroupMapper;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Fleet\EloquentMaintenanceGroup;
 use Illuminate\Support\Arr;
 
-class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
+class MaintenanceGroupRepositoryEloquent implements MaintenanceGroupRepositoryInterface
 {
     public function __construct(
-        private TaskGroupMapper $mapper,
-        private EloquentTaskGroup $eloquentModel
-        ) {}
+        private MaintenanceGroupMapper $mapper,
+        private EloquentMaintenanceGroup $eloquentModel
+    ) {}
 
-    public function save(TaskGroup $taskGroup): TaskGroup
+    public function save(MaintenanceGroup $maintenanceGroup): MaintenanceGroup
     {
-        $model = $this->mapper->toEloquent($taskGroup);
+        $model = $this->mapper->toEloquent($maintenanceGroup);
         $model->save();
         return $this->mapper->toDomain($model);
     }
 
-    public function findById(string $id): ?TaskGroup
+    public function findById(string $id): ?MaintenanceGroup
     {
         $model = $this->eloquentModel->findOrFail($id);
 
@@ -36,7 +36,7 @@ class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
             ->toArray();
     }
 
-    public function findByCode(string $code): ?TaskGroup
+    public function findByCode(string $code): ?MaintenanceGroup
     {
         $model = $this->eloquentModel
             ->where('code', '=', $code)
@@ -53,5 +53,5 @@ class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
             ->get()
             ->map(fn($m) => $this->mapper->toDomain($m))
             ->toArray();
-    }
+    }    
 }
