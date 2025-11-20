@@ -1,6 +1,6 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Activities;
 
 use Dpb\Package\Activities\Entities\Activity;
 use Dpb\Package\Activities\Repositories\ActivityRepositoryInterface;

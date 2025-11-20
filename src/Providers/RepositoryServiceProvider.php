@@ -6,15 +6,13 @@ use Dpb\Package\Activities\Repositories\ActivityRepositoryInterface;
 use Dpb\Package\Activities\Repositories\ActivityTemplateGroupRepositoryInterface;
 use Dpb\Package\Activities\Repositories\ActivityTemplateRepositoryInterface;
 use Dpb\Package\Fleet\Repositories\MaintenanceGroupRepositoryInterface;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Activities\ActivityTemplateGroupRepositoryEloquent;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Activities\ActivityTemplateRepositoryEloquent;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\ActivityRepositoryEloquent;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Fleet\MaintenanceGroupRepositoryEloquent;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\TaskGroupRepositoryEloquent;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\TaskRepositoryEloquent;
 use Dpb\Package\Tasks\Repositories\TaskGroupRepositoryInterface;
 use Dpb\Package\Tasks\Repositories\TaskRepositoryInterface;
+use Dpb\Package\Tickets\Repositories\TicketTypeRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
+
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories as TmsRepo;
+use Dpb\Package\Tickets\Repositories\TicketRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -25,14 +23,17 @@ class RepositoryServiceProvider extends ServiceProvider
     {    
         // Bind interface to implementation
         // activities
-        $this->app->bind(ActivityRepositoryInterface::class, ActivityRepositoryEloquent::class);    
-        $this->app->bind(ActivityTemplateRepositoryInterface::class, ActivityTemplateRepositoryEloquent::class);    
-        $this->app->bind(ActivityTemplateGroupRepositoryInterface::class, ActivityTemplateGroupRepositoryEloquent::class);    
+        $this->app->bind(ActivityRepositoryInterface::class, TmsRepo\Activities\ActivityRepositoryEloquent::class);    
+        $this->app->bind(ActivityTemplateRepositoryInterface::class, TmsRepo\Activities\ActivityTemplateRepositoryEloquent::class);    
+        $this->app->bind(ActivityTemplateGroupRepositoryInterface::class, TmsRepo\Activities\ActivityTemplateGroupRepositoryEloquent::class);    
         // tasks
-        $this->app->bind(TaskGroupRepositoryInterface::class, TaskGroupRepositoryEloquent::class);    
-        $this->app->bind(TaskRepositoryInterface::class, TaskRepositoryEloquent::class);    
+        $this->app->bind(TaskGroupRepositoryInterface::class, TmsRepo\TaskGroupRepositoryEloquent::class);    
+        $this->app->bind(TaskRepositoryInterface::class, TmsRepo\TaskRepositoryEloquent::class);    
+        // tickets
+        $this->app->bind(TicketTypeRepositoryInterface::class, TmsRepo\Tickets\TicketTypeRepositoryEloquent::class);    
+        $this->app->bind(TicketRepositoryInterface::class, TmsRepo\Tickets\TicketRepositoryEloquent::class);    
         // fleet
-        $this->app->bind(MaintenanceGroupRepositoryInterface::class, MaintenanceGroupRepositoryEloquent::class);    
+        $this->app->bind(MaintenanceGroupRepositoryInterface::class, TmsRepo\Fleet\MaintenanceGroupRepositoryEloquent::class);    
     }
 
     /**

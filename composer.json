@@ -15,6 +15,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
+        "andrej-horny/pkg-activities": "dev-main",
         "andrej-horny/pkg-tasks": "dev-main"
     },
     "extra": {
