@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Tickets\EloquentSubjectInterface as EloquentTicketSubjectInterface;
 
 class EloquentTicket extends Model
 {
@@ -29,7 +30,7 @@ class EloquentTicket extends Model
         'type_id',
         'subject_id',
         'subject_type',
-        'author_id',        
+        'author_id',
     ];
 
     public function __construct(array $attributes = [])
@@ -47,22 +48,31 @@ class EloquentTicket extends Model
     public function getTable()
     {
         return config('pkg-task-ms.table_prefix') . 'tickets';
-    }    
+    }
 
     public function type(): BelongsTo
     {
         return $this->belongsTo(EloquentTicketType::class, "type_id");
-    }     
-    
+    }
+
     public function subject(): MorphTo
     {
         return $this->morphTo();
-    }    
+    }
+
+    public function getSubjectLabelAttribute(): ?string
+    {
+        if (! $this->subject instanceof EloquentTicketSubjectInterface) {
+            return null; // safety fallback
+        }
+
+        return $this->subject->subjectLabel();
+    }
 
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, "author_id");
-    }      
+    }
 
     public function scopeByTypeCode(Builder $query, string|array $typeCode)
     {
@@ -72,5 +82,5 @@ class EloquentTicket extends Model
         $query->whereHas('type', function ($q) use ($typeCode) {
             $q->byCode($typeCode);
         });
-    }    
+    }
 }

@@ -1,28 +1,28 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Fleet;
 
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks\EloquentTaskGroup;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tasks\TaskGroupMapper;
-use Dpb\Package\Tasks\Entities\TaskGroup;
-use Dpb\Package\Tasks\Repositories\TaskGroupRepositoryInterface;
+use Dpb\Package\Fleet\Entities\Vehicle;
+use Dpb\Package\Fleet\Repositories\VehicleRepositoryInterface;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Fleet\VehicleMapper;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Fleet\EloquentVehicle;
 use Illuminate\Support\Arr;
 
-class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
+class VehicleRepositoryEloquent implements VehicleRepositoryInterface
 {
     public function __construct(
-        private TaskGroupMapper $mapper,
-        private EloquentTaskGroup $eloquentModel
-        ) {}
+        private VehicleMapper $mapper,
+        private EloquentVehicle $eloquentModel
+    ) {}
 
-    public function save(TaskGroup $taskGroup): TaskGroup
+    public function save(Vehicle $vehicle): Vehicle
     {
-        $model = $this->mapper->toEloquent($taskGroup);
+        $model = $this->mapper->toEloquent($vehicle);
         $model->save();
         return $this->mapper->toDomain($model);
     }
 
-    public function findById(string $id): ?TaskGroup
+    public function findById(string $id): ?Vehicle
     {
         $model = $this->eloquentModel->findOrFail($id);
 
@@ -36,7 +36,7 @@ class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
             ->toArray();
     }
 
-    public function findByCode(string $code): ?TaskGroup
+    public function findByCode(string $code): ?Vehicle
     {
         $model = $this->eloquentModel
             ->where('code', '=', $code)
@@ -53,5 +53,5 @@ class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
             ->get()
             ->map(fn($m) => $this->mapper->toDomain($m))
             ->toArray();
-    }
+    }    
 }

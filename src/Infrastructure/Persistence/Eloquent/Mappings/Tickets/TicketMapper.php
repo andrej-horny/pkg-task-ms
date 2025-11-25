@@ -2,6 +2,8 @@
 
 namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tickets;
 
+use Dpb\Package\TaskMS\Infrastructure\Adapters\Tickets\VehicleSubjectAdapter;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Fleet\VehicleMapper;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tickets\EloquentTicket;
 use Dpb\Package\Tickets\Entities\Ticket;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -10,16 +12,23 @@ class TicketMapper
 {
     public function __construct(
         private EloquentTicket $eloquentModel,
-        private TicketTypeMapper $ttMapper
+        private TicketTypeMapper $ttMapper,
+        private VehicleMapper $vehicleMapper
     ) {}
 
     public function toDomain(EloquentTicket $model): Ticket
     {
+        $subject = null;
+        if ($model->subject != null) {
+            $vehicle = $this->vehicleMapper->toDomain($model->subject);
+            new VehicleSubjectAdapter($vehicle);
+        }   
+
         return new Ticket(
             id: $model->id,
             date: $model->date,
             type: $this->ttMapper->toDomain($model->type),
-            subject: null,
+            subject: $subject,
             authorId: $model->author_id,
             description: $model->description,
             // assignedTo: new $this->mgAdapter($model->assignedTo)
@@ -39,6 +48,8 @@ class TicketMapper
         $model->description = $ticket->description();
         $model->type_id = $ticket->type()->id();
         $model->author_id = $ticket->authorId();
+        $model->subject_id = $ticket->subject()->subjectId();
+        $model->subject_type = $ticket->subject()->subjectType();
         // $model->sate = $task->state();
         return $model;
     }

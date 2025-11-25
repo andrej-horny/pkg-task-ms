@@ -6,7 +6,7 @@ use Dpb\Package\TaskMS\Infrastructure\Services\LaravelIdGenerator;
 use Dpb\Package\Activities\Entities\ActivityTemplate;
 use Dpb\Package\Activities\Services\CreateActivityTemplateService;
 
-class CreateActivityTemplateUesCase
+class CreateActivityTemplateUseCase
 {
     public function __construct(
         private CreateActivityTemplateService $createSvc,

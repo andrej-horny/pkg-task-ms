@@ -6,7 +6,7 @@ use Dpb\Package\Activities\Entities\ActivityTemplate;
 use Dpb\Package\Activities\Repositories\ActivityTemplateRepositoryInterface;
 use Dpb\Package\Activities\Services\UpdateActivityTemplateService;
 
-class UpdateActivityTemplateUesCase
+class UpdateActivityTemplateUseCase
 {
     public function __construct(
         private UpdateActivityTemplateService $updateSvc,

@@ -3,7 +3,9 @@
 namespace Dpb\Package\TaskMS\Application\UseCase\Tasks;
 
 use Dpb\Package\Fleet\Repositories\MaintenanceGroupRepositoryInterface;
+use Dpb\Package\Fleet\Repositories\VehicleRepositoryInterface;
 use Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks\MaintenanceGroupAssigneeAdapter;
+use Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks\VehicleSubjectAdapter as VehicleTaskSubjectAdapter;
 use Dpb\Package\Tasks\Entities\Task;
 use Dpb\Package\Tasks\Repositories\TaskRepositoryInterface;
 use Dpb\Package\Tasks\Services\UpdateTaskService;
@@ -14,10 +16,12 @@ class UpdateTaskUseCase
         private UpdateTaskService $updateSvc,
         private TaskRepositoryInterface $repository,
         private MaintenanceGroupRepositoryInterface $mgRepository,
+        private VehicleRepositoryInterface $vehicleRepo,
     ) {}
 
     public function execute(string $id, array $data): ?Task
     {
+        // dd($data);
         $task = $this->repository->findById($id);
 
         if (!$task) {
@@ -40,7 +44,13 @@ class UpdateTaskUseCase
             $task->assignGroupId($data['group']);
         }        
 
-        if (array_key_exists('maintenanceGroup', $data)) {
+        if (isset($data['subject'])) {
+            $vehicle = $this->vehicleRepo->findById($data['subject']);
+            $subject = new VehicleTaskSubjectAdapter($vehicle);
+            $task->assignSubject($subject);
+        } 
+
+        if (isset($date['maintenanceGroup'])) {
             $maintenanceGroup = $this->mgRepository->findById($data['maintenanceGroup']);
             $assignee = new MaintenanceGroupAssigneeAdapter($maintenanceGroup);
             $task->assignTo($assignee);

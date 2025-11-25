@@ -6,7 +6,7 @@ use Dpb\Package\Tickets\Entities\TicketType;
 use Dpb\Package\Tickets\Repositories\TicketTypeRepositoryInterface;
 use Dpb\Package\Tickets\Services\UpdateTicketTypeService;
 
-class UpdateTicketTypeUesCase
+class UpdateTicketTypeUseCase
 {
     public function __construct(
         private UpdateTicketTypeService $updateSvc,

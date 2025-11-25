@@ -6,7 +6,7 @@ use Dpb\Package\TaskMS\Infrastructure\Services\LaravelIdGenerator;
 use Dpb\Package\Tickets\Entities\TicketType;
 use Dpb\Package\Tickets\Services\CreateTicketTypeService;
 
-class CreateTicketTypeUesCase
+class CreateTicketTypeUseCase
 {
     public function __construct(
         private CreateTicketTypeService $createSvc,

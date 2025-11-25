@@ -1,6 +1,6 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;

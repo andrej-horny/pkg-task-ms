@@ -1,6 +1,6 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Tasks\EloquentSubjectInterface as EloquentTaskSubjectInterface;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Tasks\EloquentAssignedToInterface as EloquentTaskAssignedToInterface;
 
 class EloquentTask extends Model
 {
@@ -52,8 +54,26 @@ class EloquentTask extends Model
         return $this->morphTo();
     }    
 
+    public function getSubjectLabelAttribute(): ?string
+    {
+        if (! $this->subject instanceof EloquentTaskSubjectInterface) {
+            return null; // safety fallback
+        }
+
+        return $this->subject->subjectLabel();
+    }
+
     public function assignedTo(): MorphTo
     {
         return $this->morphTo();
     }       
+
+    public function getAssignedToLabelAttribute(): ?string
+    {
+        if (! $this->assignedTo instanceof EloquentTaskAssignedToInterface) {
+            return null; // safety fallback
+        }
+
+        return $this->assignedTo->assignedToLabel();
+    }    
 }

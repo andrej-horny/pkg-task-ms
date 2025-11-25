@@ -2,18 +2,21 @@
 
 namespace Dpb\Package\TaskMS\Application\UseCase\Tickets;
 
+use Dpb\Package\Fleet\Repositories\VehicleRepositoryInterface;
+use Dpb\Package\TaskMS\Infrastructure\Adapters\Tickets\VehicleSubjectAdapter;
 use Dpb\Package\Tickets\Entities\Ticket;
 use Dpb\Package\Tickets\Repositories\TicketRepositoryInterface;
 use Dpb\Package\Tickets\Repositories\TicketTypeRepositoryInterface;
 use Dpb\Package\Tickets\Services\UpdateTicketService;
 use Illuminate\Support\Carbon;
 
-class UpdateTicketUesCase
+class UpdateTicketUseCase
 {
     public function __construct(
         private UpdateTicketService $updateSvc,
         private TicketRepositoryInterface $repository,
         private TicketTypeRepositoryInterface $ttRepo,
+        private VehicleRepositoryInterface $vehicleRepo,
     ) {}
 
     public function execute(string $id, array $data): ?Ticket
@@ -36,6 +39,12 @@ class UpdateTicketUesCase
         if (array_key_exists('description', $data)) {
             $ticket->updateDescription($data['description']);
         }
+
+        if (array_key_exists('subject', $data)) {
+            $vehicle = $this->vehicleRepo->findById($data['subject']);
+            $subject = new VehicleSubjectAdapter($vehicle);
+            $ticket->assignSubject($subject);
+        }  
 
         return $this->updateSvc->handle($ticket);
     }

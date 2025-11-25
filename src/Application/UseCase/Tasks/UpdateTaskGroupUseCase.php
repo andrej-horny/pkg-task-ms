@@ -6,7 +6,7 @@ use Dpb\Package\Tasks\Entities\TaskGroup;
 use Dpb\Package\Tasks\Repositories\TaskGroupRepositoryInterface;
 use Dpb\Package\Tasks\Services\UpdateTaskGroupService;
 
-class UpdateTaskGroupUesCase
+class UpdateTaskGroupUseCase
 {
     public function __construct(
         private UpdateTaskGroupService $updateSvc,

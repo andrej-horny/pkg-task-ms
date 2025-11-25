@@ -6,6 +6,10 @@ use Dpb\Package\Activities\Repositories\ActivityRepositoryInterface;
 use Dpb\Package\Activities\Repositories\ActivityTemplateGroupRepositoryInterface;
 use Dpb\Package\Activities\Repositories\ActivityTemplateRepositoryInterface;
 use Dpb\Package\Fleet\Repositories\MaintenanceGroupRepositoryInterface;
+use Dpb\Package\Fleet\Repositories\VehicleBrandRepositoryInterface;
+use Dpb\Package\Fleet\Repositories\VehicleModelRepositoryInterface;
+use Dpb\Package\Fleet\Repositories\VehicleRepositoryInterface;
+use Dpb\Package\Fleet\Repositories\VehicleTypeRepositoryInterface;
 use Dpb\Package\Tasks\Repositories\TaskGroupRepositoryInterface;
 use Dpb\Package\Tasks\Repositories\TaskRepositoryInterface;
 use Dpb\Package\Tickets\Repositories\TicketTypeRepositoryInterface;
@@ -34,6 +38,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TicketRepositoryInterface::class, TmsRepo\Tickets\TicketRepositoryEloquent::class);    
         // fleet
         $this->app->bind(MaintenanceGroupRepositoryInterface::class, TmsRepo\Fleet\MaintenanceGroupRepositoryEloquent::class);    
+        $this->app->bind(VehicleRepositoryInterface::class, TmsRepo\Fleet\VehicleRepositoryEloquent::class);    
+        $this->app->bind(VehicleBrandRepositoryInterface::class, TmsRepo\Fleet\VehicleBrandRepositoryEloquent::class);    
+        $this->app->bind(VehicleTypeRepositoryInterface::class, TmsRepo\Fleet\VehicleTypeRepositoryEloquent::class);    
+        $this->app->bind(VehicleModelRepositoryInterface::class, TmsRepo\Fleet\VehicleModelRepositoryEloquent::class);    
     }
 
     /**

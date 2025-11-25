@@ -2,6 +2,7 @@
 
 namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Fleet;
 
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Tasks\EloquentAssignedToInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,9 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 
-class EloquentMaintenanceGroup extends Model
+class EloquentMaintenanceGroup extends Model implements EloquentAssignedToInterface
 {
     use SoftDeletes;
+
+    protected $keyType = 'string'; // Eloquent needs string keys
+    public $incrementing = false;  // ULID is not auto-increment
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +23,7 @@ class EloquentMaintenanceGroup extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'id',
         'code',
         'title',
         'description',
@@ -29,6 +34,11 @@ class EloquentMaintenanceGroup extends Model
     public function getTable()
     {
         return config('pkg-task-ms.table_prefix') . 'maintenance_groups';
+    }
+
+    public function assignedToLabel(): string
+    {
+        return $this->code;
     }
 
     // public function vehicles() : HasMany {
