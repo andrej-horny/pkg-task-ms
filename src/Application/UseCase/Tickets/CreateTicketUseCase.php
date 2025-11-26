@@ -2,21 +2,20 @@
 
 namespace Dpb\Package\TaskMS\Application\UseCase\Tickets;
 
-use Dpb\Package\Fleet\Repositories\VehicleRepositoryInterface;
-use Dpb\Package\TaskMS\Infrastructure\Adapters\Tickets\VehicleSubjectAdapter;
-use Dpb\Package\TaskMS\Infrastructure\Services\LaravelIdGenerator;
+use DateTimeImmutable;
+use Dpb\Package\TaskMS\Application\Factories\Tickets\TicketSubjectFactory;
+use Dpb\Package\TaskMS\Infrastructure\Contracts\IdGeneratorInterface;
 use Dpb\Package\Tickets\Entities\Ticket;
 use Dpb\Package\Tickets\Repositories\TicketTypeRepositoryInterface;
 use Dpb\Package\Tickets\Services\CreateTicketService;
-use Illuminate\Support\Carbon;
 
 class CreateTicketUseCase
 {
     public function __construct(
         private CreateTicketService $createSvc,
-        private LaravelIdGenerator $idGenerator,
+        private IdGeneratorInterface $idGenerator,
         private TicketTypeRepositoryInterface $ttRepo,
-        private VehicleRepositoryInterface $vehicleRepo,
+        private TicketSubjectFactory $subjectFactory,
     ) {}
 
     public function execute(array $data): ?Ticket
@@ -24,13 +23,12 @@ class CreateTicketUseCase
         // ticket type
         $ticketType = $this->ttRepo->findById($data['type_id']);
         // subject
-        $vehicle = $this->vehicleRepo->findById($data['subject']);
-        $subject = new VehicleSubjectAdapter($vehicle);
+        $subject = $this->subjectFactory->make('vehicle', $data['subject_id']);        
 
         // dd($data['date']);
         $ticket = new Ticket(
             $this->idGenerator->generate(),
-            Carbon::createFromFormat('Y-m-d', $data['date']),
+            new DateTimeImmutable($data['date']),
             $ticketType,
             $subject,
             auth()->user()->id,

@@ -2,10 +2,8 @@
 
 namespace Dpb\Package\TaskMS\Application\UseCase\Tasks;
 
-use Dpb\Package\Fleet\Repositories\MaintenanceGroupRepositoryInterface;
-use Dpb\Package\Fleet\Repositories\VehicleRepositoryInterface;
-use Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks\MaintenanceGroupAssigneeAdapter;
-use Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks\VehicleSubjectAdapter as VehicleTaskSubjectAdapter;
+use Dpb\Package\TaskMS\Application\Factories\Tasks\TaskAssigneeFactory;
+use Dpb\Package\TaskMS\Application\Factories\Tasks\TaskSubjectFactory;
 use Dpb\Package\Tasks\Entities\Task;
 use Dpb\Package\Tasks\Repositories\TaskRepositoryInterface;
 use Dpb\Package\Tasks\Services\UpdateTaskService;
@@ -15,8 +13,8 @@ class UpdateTaskUseCase
     public function __construct(
         private UpdateTaskService $updateSvc,
         private TaskRepositoryInterface $repository,
-        private MaintenanceGroupRepositoryInterface $mgRepository,
-        private VehicleRepositoryInterface $vehicleRepo,
+        private TaskSubjectFactory $subjectFactory,
+        private TaskAssigneeFactory $assigneeFactory,
     ) {}
 
     public function execute(string $id, array $data): ?Task
@@ -40,21 +38,19 @@ class UpdateTaskUseCase
             $task->updateDescription($data['description']);
         }
 
-        if (array_key_exists('group', $data)) {
-            $task->assignGroupId($data['group']);
+        if (array_key_exists('group_id', $data)) {
+            $task->assignGroupId($data['group_id']);
         }        
 
-        if (isset($data['subject'])) {
-            $vehicle = $this->vehicleRepo->findById($data['subject']);
-            $subject = new VehicleTaskSubjectAdapter($vehicle);
+        if (array_key_exists('subject_id', $data)) {
+            $subject = $this->subjectFactory->make('vehicle', $data['subject_id']);
             $task->assignSubject($subject);
-        } 
+        }  
 
-        if (isset($date['maintenanceGroup'])) {
-            $maintenanceGroup = $this->mgRepository->findById($data['maintenanceGroup']);
-            $assignee = new MaintenanceGroupAssigneeAdapter($maintenanceGroup);
+        if (array_key_exists('assigned_to_id', $data)) {
+            $assignee = $this->assigneeFactory->make('maintenance-group', $data['assigned_to_id']);
             $task->assignTo($assignee);
-        }           
+        }         
         
         return $this->updateSvc->handle($task);
     }

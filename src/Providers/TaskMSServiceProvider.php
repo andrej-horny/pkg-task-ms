@@ -2,7 +2,9 @@
 
 namespace Dpb\Package\TaskMS\Providers;
 
+use Dpb\Package\TaskMS\Infrastructure\Contracts\IdGeneratorInterface;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models;
+use Dpb\Package\TaskMS\Infrastructure\Services\LaravelIdGenerator;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Artisan;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -55,9 +57,16 @@ class TaskMSServiceProvider extends PackageServiceProvider
             'eloquent-maintenance-group' => Models\Fleet\EloquentMaintenanceGroup::class,
             'eloquent-vehicle' => Models\Fleet\EloquentVehicle::class,
             'eloquent-vehicle-brand' => Models\Fleet\EloquentVehicleBrand::class,
+            'eloquent-vehicle-group' => Models\Fleet\EloquentVehicleGroup::class,
             'eloquent-vehicle-model' => Models\Fleet\EloquentVehicleModel::class,
             'eloquent-vehicle-type' => Models\Fleet\EloquentVehicleType::class,
 
         ]);
+    }
+
+    public function packageRegistered()
+    {
+        // Bind interface to implementation
+        $this->app->bind(IdGeneratorInterface::class, LaravelIdGenerator::class);
     }
 }

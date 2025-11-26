@@ -4,8 +4,9 @@ namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Fleet;
 
 use Dpb\Extension\ModelState\Traits\HasStateHistory;
 use Dpb\Package\Fleet\States\VehicleState;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Tickets\EloquentSubjectInterface as EloquentTicketSubjectInterface;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Inspections\EloquentSubjectInterface as EloquentInspectionSubjectInterface;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Tasks\EloquentSubjectInterface as EloquentTaskSubjectInterface;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Tickets\EloquentSubjectInterface as EloquentTicketSubjectInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\HasStatesContract;
 
-class EloquentVehicle extends Model implements EloquentTicketSubjectInterface, EloquentTaskSubjectInterface
+class EloquentVehicle extends Model implements
+    EloquentTicketSubjectInterface,
+    EloquentTaskSubjectInterface,
+    EloquentInspectionSubjectInterface
 {
     use SoftDeletes;
     // use HasStates;
@@ -63,7 +67,7 @@ class EloquentVehicle extends Model implements EloquentTicketSubjectInterface, E
 
     public function subjectLabel(): string
     {
-        return $this->code_1;
+        return $this->code_1 ?? 'N/A';
     }
 
     public function model(): BelongsTo
@@ -76,21 +80,21 @@ class EloquentVehicle extends Model implements EloquentTicketSubjectInterface, E
         return $this->belongsTo(EloquentMaintenanceGroup::class, "maintenance_group_id");
     }
 
-    // public function groups(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(
-    //         VehicleGroup::class,
-    //         config('pkg-fleet.table_prefix') . "group_vehicle",
-    //         'vehicle_id',
-    //         'group_id'
-    //     );
-    // }
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            EloquentVehicleGroup::class,
+            config('pkg-task-ms.table_prefix') . "group_vehicle",
+            'vehicle_id',
+            'group_id'
+        );
+    }
 
     // public function licencePlates(): BelongsToMany
     // {
     //     return $this->belongsToMany(
     //         LicencePlate::class,
-    //         config('pkg-fleet.table_prefix') . "licence_plate_history",
+    //         config('pkg-task-ms.table_prefix') . "licence_plate_history",
     //         'vehicle_id',
     //         'licence_plate_id',
     //     )
@@ -107,7 +111,7 @@ class EloquentVehicle extends Model implements EloquentTicketSubjectInterface, E
     // {
     //     return $this->belongsToMany(
     //         VehicleCode::class,
-    //         config('pkg-fleet.table_prefix') . "vehicle_code_history",
+    //         config('pkg-task-ms.table_prefix') . "vehicle_code_history",
     //         'vehicle_id',
     //         'vehicle_code_id',
     //         'id',
@@ -122,11 +126,13 @@ class EloquentVehicle extends Model implements EloquentTicketSubjectInterface, E
      * 
      * @return object|object{pivot: \Illuminate\Database\Eloquent\Relations\Pivot|VehicleCode|null}
      */
-    public function getCodeAttribute(): ?EloquentVehicleCode
+    // public function getCodeAttribute(): ?EloquentVehicleCode
+    public function getCodeAttribute()
     {
-        return $this->codes()
-            ->orderByDesc('date_from')
-            ->first();
+        // return $this->codes()
+        //     ->orderByDesc('date_from')
+        //     ->first();
+        return $this->code_1;
     }
 
     // public function getLicencePlateAttribute()
@@ -137,77 +143,77 @@ class EloquentVehicle extends Model implements EloquentTicketSubjectInterface, E
     // }
 
     // // TO DO
-    // public function isUnderWarranty(): bool
-    // {
-    //     return true;
-    // }
+    public function isUnderWarranty(): bool
+    {
+        return true;
+    }
 
     // public function travelLog(): HasMany
     // {
     //     return $this->hasMany(TravelLog::class, 'vehicle_id');
     // }
 
-    // /**
-    //  * Summary of scopeByType
-    //  * @param \Illuminate\Database\Eloquent\Builder $query
-    //  * @param string|array $type
-    //  * @return void
-    //  */
-    // public function scopeByType(Builder $query, string|array $type)
-    // {
-    //     // cast input to array
-    //     $type = is_array($type) ? $type : [$type];
+    /**
+     * Summary of scopeByType
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|array $type
+     * @return void
+     */
+    public function scopeByType(Builder $query, string|array $type)
+    {
+        // cast input to array
+        $type = is_array($type) ? $type : [$type];
 
-    //     $query->whereHas('model', function ($q) use ($type) {
-    //         $q->byType($type);
-    //     });
-    // }
+        $query->whereHas('model', function ($q) use ($type) {
+            $q->byType($type);
+        });
+    }
 
-    // /**
-    //  * Summary of scopeByBrand
-    //  * @param \Illuminate\Database\Eloquent\Builder $query
-    //  * @param string|array $brand
-    //  * @return void
-    //  */
-    // public function scopeByBrand(Builder $query, string|array $brand)
-    // {
-    //     // cast input to array
-    //     $brand = is_array($brand) ? $brand : [$brand];
+    /**
+     * Summary of scopeByBrand
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|array $brand
+     * @return void
+     */
+    public function scopeByBrand(Builder $query, string|array $brand)
+    {
+        // cast input to array
+        $brand = is_array($brand) ? $brand : [$brand];
 
-    //     $query->whereHas('model', function ($q) use ($brand) {
-    //         $q->byBrand($brand);
-    //     });
-    // }
+        $query->whereHas('model', function ($q) use ($brand) {
+            $q->byBrand($brand);
+        });
+    }
 
-    // /**
-    //  * Summary of scopeByMaintenanceGroup
-    //  * @param \Illuminate\Database\Eloquent\Builder $query
-    //  * @param string|array $maintenanceGroup
-    //  * @return void
-    //  */
-    // public function scopeByMaintenanceGroup(Builder $query, string|array $maintenanceGroup)
-    // {
-    //     // cast input to array
-    //     $maintenanceGroup = is_array($maintenanceGroup) ? $maintenanceGroup : [$maintenanceGroup];
+    /**
+     * Summary of scopeByMaintenanceGroup
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|array $maintenanceGroup
+     * @return void
+     */
+    public function scopeByMaintenanceGroup(Builder $query, string|array $maintenanceGroup)
+    {
+        // cast input to array
+        $maintenanceGroup = is_array($maintenanceGroup) ? $maintenanceGroup : [$maintenanceGroup];
 
-    //     $query->whereHas('maintenanceGroup', function ($q) use ($maintenanceGroup) {
-    //         $q->byCode($maintenanceGroup);
-    //     });
-    // }
+        $query->whereHas('maintenanceGroup', function ($q) use ($maintenanceGroup) {
+            $q->byCode($maintenanceGroup);
+        });
+    }
 
-    // /**
-    //  * Summary of scopeByGroup
-    //  * @param \Illuminate\Database\Eloquent\Builder $query
-    //  * @param string|array $group
-    //  * @return void
-    //  */
-    // public function scopeByGroup(Builder $query, string|array $group)
-    // {
-    //     // cast input to array
-    //     $group = is_array($group) ? $group : [$group];
+    /**
+     * Summary of scopeByGroup
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|array $group
+     * @return void
+     */
+    public function scopeByGroup(Builder $query, string|array $group)
+    {
+        // cast input to array
+        $group = is_array($group) ? $group : [$group];
 
-    //     $query->whereHas('groups', function ($q) use ($group) {
-    //         $q->byCode($group);
-    //     });
-    // }    
+        $query->whereHas('groups', function ($q) use ($group) {
+            $q->byCode($group);
+        });
+    }
 }

@@ -2,7 +2,6 @@
 
 namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Fleet;
 
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks\EloquentTaskGroup;
 use Dpb\Package\Fleet\Entities\MaintenanceGroup;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Fleet\EloquentMaintenanceGroup;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -11,6 +10,7 @@ class MaintenanceGroupMapper
 {
     public function __construct(
         private EloquentMaintenanceGroup $eloquentModel,
+        private VehicleTypeMapper $vtMapper,
     ) {}
 
     public function toDomain(EloquentMaintenanceGroup $model): MaintenanceGroup
@@ -20,6 +20,7 @@ class MaintenanceGroupMapper
             $model->code,
             $model->title,
             $model->description,
+            $model->vehicleType ? $this->vtMapper->toDomain($model->vehicleType) : null,
         );
     }
 
@@ -29,6 +30,7 @@ class MaintenanceGroupMapper
         $model->code = $maintenanceGroup->code();
         $model->title = $maintenanceGroup->title();
         $model->description = $maintenanceGroup->description();
+        $model->vehicle_type_id = $maintenanceGroup->vehicleType()->id();
         return $model;
     }
 

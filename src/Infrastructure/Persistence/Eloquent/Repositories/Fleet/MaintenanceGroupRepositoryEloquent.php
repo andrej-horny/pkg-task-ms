@@ -53,5 +53,16 @@ class MaintenanceGroupRepositoryEloquent implements MaintenanceGroupRepositoryIn
             ->get()
             ->map(fn($m) => $this->mapper->toDomain($m))
             ->toArray();
-    }    
+    }   
+    
+    public function byType(string|array $code): ?array
+    {
+        $code = Arr::wrap($code);
+
+        return $this->eloquentModel
+            ->byVehicleType($code)
+            ->get()
+            ->map(fn($m) => $this->mapper->toDomain($m))
+            ->toArray();
+    }     
 }

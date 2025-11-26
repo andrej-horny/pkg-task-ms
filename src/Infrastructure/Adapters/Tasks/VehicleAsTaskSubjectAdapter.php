@@ -1,11 +1,11 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Adapters\Tickets;
+namespace Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks;
 
 use Dpb\Package\Fleet\Entities\Vehicle;
-use Dpb\Package\Tickets\Contracts\SubjectInterface;
+use Dpb\Package\Tasks\Contracts\SubjectInterface;
 
-class VehicleSubjectAdapter implements SubjectInterface
+class VehicleAsTaskSubjectAdapter implements SubjectInterface
 {
     public function __construct(private Vehicle $vehicle) {}
 
@@ -16,11 +16,11 @@ class VehicleSubjectAdapter implements SubjectInterface
 
     public function subjectType(): string
     {
-        return 'vehicle';
+        return 'eloquent-vehicle';
     }
 
     public function subjectLabel(): string
     {
-        return $this->vehicle->code();
+        return $this->vehicle->code()->code();
     }
 }

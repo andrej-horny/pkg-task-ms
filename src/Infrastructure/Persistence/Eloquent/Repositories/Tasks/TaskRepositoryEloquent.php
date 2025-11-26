@@ -1,13 +1,11 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Tasks;
 
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks\EloquentTask;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tasks\TaskMapper;
 use Dpb\Package\Tasks\Entities\Task;
-use Dpb\Package\Tasks\Entities\TaskGroup;
 use Dpb\Package\Tasks\Repositories\TaskRepositoryInterface;
-use Illuminate\Support\Arr;
 
 class TaskRepositoryEloquent implements TaskRepositoryInterface
 {

@@ -1,28 +1,28 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Inspections;
 
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks\EloquentTaskGroup;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tasks\TaskGroupMapper;
-use Dpb\Package\Tasks\Entities\TaskGroup;
-use Dpb\Package\Tasks\Repositories\TaskGroupRepositoryInterface;
+use Dpb\Package\Inspections\Entities\InspectionTemplate;
+use Dpb\Package\Inspections\Repositories\InspectionTemplateRepositoryInterface;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Inspections\InspectionTemplateMapper;
 use Illuminate\Support\Arr;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Inspections\EloquentInspectionTemplate;
 
-class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
+class InspectionTemplateRepositoryEloquent implements InspectionTemplateRepositoryInterface
 {
     public function __construct(
-        private TaskGroupMapper $mapper,
-        private EloquentTaskGroup $eloquentModel
+        private InspectionTemplateMapper $mapper,
+        private EloquentInspectionTemplate $eloquentModel
         ) {}
 
-    public function save(TaskGroup $taskGroup): TaskGroup
+    public function save(InspectionTemplate $template): InspectionTemplate
     {
-        $model = $this->mapper->toEloquent($taskGroup);
+        $model = $this->mapper->toEloquent($template);
         $model->save();
         return $this->mapper->toDomain($model);
     }
 
-    public function findById(string $id): ?TaskGroup
+    public function findById(string $id): ?InspectionTemplate
     {
         $model = $this->eloquentModel->findOrFail($id);
 
@@ -36,7 +36,7 @@ class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
             ->toArray();
     }
 
-    public function findByCode(string $code): ?TaskGroup
+    public function findByCode(string $code): ?InspectionTemplate
     {
         $model = $this->eloquentModel
             ->where('code', '=', $code)

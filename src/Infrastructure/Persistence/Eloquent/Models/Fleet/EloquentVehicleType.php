@@ -2,8 +2,10 @@
 
 namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Fleet;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 
 class EloquentVehicleType extends Model
 {
@@ -27,4 +29,12 @@ class EloquentVehicleType extends Model
     {
         return config('pkg-task-ms.table_prefix') . 'vehicle_types';
     }
+
+    public function scopeByCode(Builder $query, string|array $code)
+    {
+        // cast input to array
+        $code = Arr::wrap($code);
+
+        $query->whereIn('code', $code);        
+    }    
 }

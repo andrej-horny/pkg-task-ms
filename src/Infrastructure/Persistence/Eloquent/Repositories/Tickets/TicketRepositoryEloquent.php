@@ -3,7 +3,7 @@
 namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Tickets;
 
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tickets\TicketMapper;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tickets\EloquentTicketType;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tickets\EloquentTicket;
 use Dpb\Package\Tickets\Entities\Ticket;
 use Dpb\Package\Tickets\Repositories\TicketRepositoryInterface;
 
@@ -11,7 +11,7 @@ class TicketRepositoryEloquent implements TicketRepositoryInterface
 {
     public function __construct(
         private TicketMapper $mapper,
-        private EloquentTicketType $eloquentModel
+        private EloquentTicket $eloquentModel
         ) {}
 
     public function save(Ticket $ticket): Ticket

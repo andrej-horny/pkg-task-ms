@@ -2,8 +2,8 @@
 
 namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tickets;
 
-use Dpb\Package\TaskMS\Infrastructure\Adapters\Tickets\VehicleSubjectAdapter;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Fleet\VehicleMapper;
+use DateTimeImmutable;
+use Dpb\Package\TaskMS\Application\Factories\Tickets\EloquentTicketSubjectFactory;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tickets\EloquentTicket;
 use Dpb\Package\Tickets\Entities\Ticket;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -13,31 +13,18 @@ class TicketMapper
     public function __construct(
         private EloquentTicket $eloquentModel,
         private TicketTypeMapper $ttMapper,
-        private VehicleMapper $vehicleMapper
+        private EloquentTicketSubjectFactory $subjectFactory,
     ) {}
 
     public function toDomain(EloquentTicket $model): Ticket
     {
-        $subject = null;
-        if ($model->subject != null) {
-            $vehicle = $this->vehicleMapper->toDomain($model->subject);
-            new VehicleSubjectAdapter($vehicle);
-        }   
-
         return new Ticket(
             id: $model->id,
-            date: $model->date,
+            date: new DateTimeImmutable($model->date),
             type: $this->ttMapper->toDomain($model->type),
-            subject: $subject,
+            subject: $this->subjectFactory->make($model->subject),
             authorId: $model->author_id,
             description: $model->description,
-            // assignedTo: new $this->mgAdapter($model->assignedTo)
-            // $model->subject,
-            // $model->assig,
-            // null,
-            // $model->state,
-            // null,
-            // null,
         );
     }
 

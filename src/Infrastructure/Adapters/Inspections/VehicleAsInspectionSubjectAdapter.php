@@ -1,11 +1,11 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks;
+namespace Dpb\Package\TaskMS\Infrastructure\Adapters\Inspections;
 
 use Dpb\Package\Fleet\Entities\Vehicle;
-use Dpb\Package\Tasks\Contracts\SubjectInterface;
+use Dpb\Package\Inspections\Contracts\SubjectInterface;
 
-class VehicleSubjectAdapter implements SubjectInterface
+class VehicleAsInspectionSubjectAdapter implements SubjectInterface
 {
     public function __construct(private Vehicle $vehicle) {}
 
@@ -21,6 +21,6 @@ class VehicleSubjectAdapter implements SubjectInterface
 
     public function subjectLabel(): string
     {
-        return $this->vehicle->code();
+        return $this->vehicle->code()->code();
     }
 }

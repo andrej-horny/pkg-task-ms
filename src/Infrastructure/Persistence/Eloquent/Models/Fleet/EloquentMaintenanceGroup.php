@@ -45,38 +45,38 @@ class EloquentMaintenanceGroup extends Model implements EloquentAssignedToInterf
     //     return $this->hasMany(Vehicle::class);
     // }
 
-    // public function vehicleType() : BelongsTo {
-    //     return $this->belongsTo(VehicleType::class);
-    // }
+    public function vehicleType() : BelongsTo {
+        return $this->belongsTo(EloquentVehicleType::class);
+    }
 
-    // /**
-    //  * Summary of scopeByCode
-    //  * @param \Illuminate\Database\Eloquent\Builder $query
-    //  * @param string|array $code
-    //  * @return void
-    //  */
-    // public function scopeByCode(Builder $query, string|array $code)
-    // {
-    //     // cast input to array
-    //     $code = is_array($code) ? $code : [$code];
+    /**
+     * Summary of scopeByCode
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|array $code
+     * @return void
+     */
+    public function scopeByCode(Builder $query, string|array $code)
+    {
+        // cast input to array
+        $code = Arr::wrap($code);
 
-    //     $query->whereIn('code', $code);
-    // }    
+        $query->whereIn('code', $code);
+    }    
 
-    // /**
-    //  * Summary of scopeByType
-    //  * @param \Illuminate\Database\Eloquent\Builder $query
-    //  * @param string|array $type
-    //  * @return void
-    //  */
-    // public function scopeByVehicleType(Builder $query, string|array $type)
-    // {
-    //     // cast input to array
-    //     $type = Arr::wrap($type);
+    /**
+     * Summary of scopeByType
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|array $type
+     * @return void
+     */
+    public function scopeByVehicleType(Builder $query, string|array $type)
+    {
+        // cast input to array
+        $type = Arr::wrap($type);
 
-    //     $query->whereHas('vehicleType', function ($q) use ($type) {
-    //         $q->byCode($type);
-    //     });
-    // }
+        $query->whereHas('vehicleType', function ($q) use ($type) {
+            $q->byCode($type);
+        });
+    }
 
 }

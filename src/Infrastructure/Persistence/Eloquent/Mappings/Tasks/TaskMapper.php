@@ -2,11 +2,10 @@
 
 namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tasks;
 
+use DateTimeImmutable;
+use Dpb\Package\TaskMS\Application\Factories\Tasks\EloquentTaskAssigneeFactory;
+use Dpb\Package\TaskMS\Application\Factories\Tasks\EloquentTaskSubjectFactory;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks\EloquentTask;
-use Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks\MaintenanceGroupAssigneeAdapter;
-use Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks\VehicleSubjectAdapter as VehicleTaskSubjectAdapter;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Fleet\MaintenanceGroupMapper;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Fleet\VehicleMapper;
 use Dpb\Package\Tasks\Entities\Task;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
@@ -14,41 +13,22 @@ class TaskMapper
 {
     public function __construct(
         private EloquentTask $eloquentModel,
-        private MaintenanceGroupMapper $mgMapper,
-        private VehicleMapper $vehicleMapper,
-        // private MaintenanceGroupAssigneeAdapter $mgAdapter,
+        private EloquentTaskSubjectFactory $subjectFactory,
+        private EloquentTaskAssigneeFactory $assigneeFacotry
     ) {}
 
     public function toDomain(EloquentTask $model): Task
     {
-
-        $subject = null;
-        if ($model->subject != null) {
-            $vehicle = $this->vehicleMapper->toDomain($model->subject);
-            new VehicleTaskSubjectAdapter($vehicle);
-        }  
-
-        $assignedTo = null;
-        if ($model->assignedTo != null) {
-            $maintenanceGroup = $this->mgMapper->toDomain($model->assignedTo);
-            new MaintenanceGroupAssigneeAdapter($maintenanceGroup);
-        }           
-
         return new Task(
             id: $model->id,
+            // date: new DateTimeImmutable($model->date),
             date: $model->date,
             title: $model->title,
             description: $model->description,
             taskGroupId: $model->group_id,
-            subject: $subject,
-            assignedTo: $assignedTo
-            // assignedTo: new $this->mgAdapter($model->assignedTo)
-            // $model->subject,
-            // $model->assig,
-            // null,
-            // $model->state,
-            // null,
-            // null,
+            subject: $this->subjectFactory->make($model->subject),
+            assignedTo: $this->assigneeFacotry->make($model->assignedTo),
+            authorId: $model->author_id
         );
     }
 

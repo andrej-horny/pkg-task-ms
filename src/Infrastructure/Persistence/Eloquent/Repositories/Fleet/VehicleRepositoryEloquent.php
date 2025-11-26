@@ -19,6 +19,7 @@ class VehicleRepositoryEloquent implements VehicleRepositoryInterface
     {
         $model = $this->mapper->toEloquent($vehicle);
         $model->save();
+        dd($model);
         return $this->mapper->toDomain($model);
     }
 
@@ -53,5 +54,49 @@ class VehicleRepositoryEloquent implements VehicleRepositoryInterface
             ->get()
             ->map(fn($m) => $this->mapper->toDomain($m))
             ->toArray();
+    }   
+    
+    public function byMaintenanceGroup(string|array $code): ?array
+    {
+        $code = Arr::wrap($code);
+
+        return $this->eloquentModel
+            ->byMaintenanceGroup($code)
+            ->get()
+            ->map(fn($m) => $this->mapper->toDomain($m))
+            ->toArray();
+    }       
+
+    public function byGroup(string|array $code): ?array
+    {
+        $code = Arr::wrap($code);
+
+        return $this->eloquentModel
+            ->byGroup($code)
+            ->get()
+            ->map(fn($m) => $this->mapper->toDomain($m))
+            ->toArray();
     }    
+
+    public function byType(string|array $code): ?array
+    {
+        $code = Arr::wrap($code);
+
+        return $this->eloquentModel
+            ->byType($code)
+            ->get()
+            ->map(fn($m) => $this->mapper->toDomain($m))
+            ->toArray();
+    } 
+    
+    public function byBrand(string|array $title): ?array
+    {
+        $code = Arr::wrap($title);
+
+        return $this->eloquentModel
+            ->byBrand($title)
+            ->get()
+            ->map(fn($m) => $this->mapper->toDomain($m))
+            ->toArray();
+    }     
 }

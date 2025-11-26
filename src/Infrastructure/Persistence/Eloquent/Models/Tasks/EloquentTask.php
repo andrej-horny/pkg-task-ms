@@ -2,6 +2,7 @@
 
 namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,6 +26,7 @@ class EloquentTask extends Model
      */
     protected $fillable = [
         'id',
+        'date',
         'title',
         'description',
         'group_id',
@@ -38,6 +40,18 @@ class EloquentTask extends Model
     {
         return config('pkg-task-ms.table_prefix') . 'tasks';
     }    
+
+    public function __construct(array $attributes = [])
+    {
+        // Dynamically resolve state class from config (falls back to default)
+        $this->casts['date'] = 'date';
+        // $this->casts['state'] = config(
+        //     'pkg-tasks.classes.task_state_class',
+        //     TaskState::class // package default
+        // );
+
+        parent::__construct($attributes);
+    }
 
     // public function tasks(): HasMany
     // {
@@ -75,5 +89,10 @@ class EloquentTask extends Model
         }
 
         return $this->assignedTo->assignedToLabel();
+    }    
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class, "author_id");
     }    
 }
