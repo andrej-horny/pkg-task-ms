@@ -14,21 +14,30 @@ class TaskMapper
     public function __construct(
         private EloquentTask $eloquentModel,
         private EloquentTaskSubjectFactory $subjectFactory,
-        private EloquentTaskAssigneeFactory $assigneeFacotry
+        private EloquentTaskAssigneeFactory $assigneeFacotry,
+        private TaskGroupMapper $tgMapper,
+        private TaskItemMapper $tiMapper,
+        private PlaceOfOccurrenceMapper $poMapper,
     ) {}
 
     public function toDomain(EloquentTask $model): Task
     {
+        $taskItems = $model->taskItems
+            ->map(fn ($itemModel) => $this->tiMapper->toDomain($itemModel))
+            ->toArray();
+
         return new Task(
             id: $model->id,
-            // date: new DateTimeImmutable($model->date),
-            date: $model->date,
+            date: new DateTimeImmutable($model->date),
+            // date: $model->date,
             title: $model->title,
             description: $model->description,
-            taskGroupId: $model->group_id,
+            taskGroup: $model->group ? $this->tgMapper->toDomain($model->group) : null,
             subject: $this->subjectFactory->make($model->subject),
             assignedTo: $this->assigneeFacotry->make($model->assignedTo),
-            authorId: $model->author_id
+            placeOfOccurence: $model->placeOfOccurence ? $this->poMapper->toDomain($model->placeOfOccurence) : null,
+            authorId: $model->author_id,
+            // taskItems: $taskItems
         );
     }
 
@@ -38,13 +47,20 @@ class TaskMapper
         $model->date = $task->date();
         $model->title = $task->title();
         $model->description = $task->description();
-        $model->group_id = $task->taskGroupId();
+        $model->group_id = $task->taskGroup()->id();
         $model->assigned_to_id = $task->assignedTo()?->assigneeId();
         $model->assigned_to_type = $task->assignedTo()?->assigneeType();
         $model->subject_id = $task->subject()?->subjectId();
         $model->subject_type = $task->subject()?->subjectType();
+        $model->place_of_occurence_id = $task->placeOfOccurence()?->id();
+        $model->author_id = $task->authorId();
 
         // $model->sate = $task->state();
+        // map items 
+        // $model->items = collect($task->taskItems())
+        //     ->map(fn($item) => $this->tiMapper->toEloquent($item))
+        //     ->toArray();
+
         return $model;
     }
 

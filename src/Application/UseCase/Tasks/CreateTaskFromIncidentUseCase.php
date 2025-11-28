@@ -24,7 +24,7 @@ class CreateTaskFromIncidentUseCase
             Carbon::now(),
              null,
             $incidentAssignment->incident->description,
-            $this->taskGroupRepo->findByCode($incidentAssignment->incident->type->code)->id(),
+            $this->taskGroupRepo->findByUri($incidentAssignment->incident->type->code)->id(),
             null,
             null
         );

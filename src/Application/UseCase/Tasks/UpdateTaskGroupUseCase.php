@@ -25,8 +25,8 @@ class UpdateTaskGroupUseCase
             $taskGroup->rename($data['title']); // domain behavior
         }
 
-        if (array_key_exists('code', $data)) {
-            $taskGroup->updateCode($data['code']);
+        if (array_key_exists('uri', $data)) {
+            $taskGroup->updateUri($data['uri']);
         }
 
         if (array_key_exists('description', $data)) {

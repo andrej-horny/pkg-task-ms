@@ -16,7 +16,7 @@ class TicketTypeMapper
     {
         return new TicketType(
             id: $model->id,
-            code: $model->code,
+            uri: $model->uri,
             title: $model->title,
         );
     }
@@ -24,7 +24,7 @@ class TicketTypeMapper
     public function toEloquent(TicketType $ticketType): EloquentTicketType
     {
         $model = $this->eloquentModel->firstOrNew(['id' => $ticketType->id()]);
-        $model->code = $ticketType->code();
+        $model->uri = $ticketType->uri();
         $model->title = $ticketType->title();
         return $model;
     }

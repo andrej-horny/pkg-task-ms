@@ -17,7 +17,7 @@ class CreateTicketTypeUseCase
     {
         $ticketType = new TicketType(
             $this->idGenerator->generate(),
-            $data['code'],
+            $data['uri'],
             $data['title'] ?? null,
         );
         

@@ -5,7 +5,7 @@ namespace Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks;
 use Dpb\Package\Fleet\Entities\MaintenanceGroup;
 use Dpb\Package\Tasks\Contracts\AssigneeInterface;
 
-class MaintenanceGroupAsTaskAssigneeAdapter implements AssigneeInterface
+class MaintenanceGroupAsAssigneeAdapter implements AssigneeInterface
 {
     public function __construct(private MaintenanceGroup $maintenanceGroup) {}
 

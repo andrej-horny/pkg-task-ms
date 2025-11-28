@@ -5,6 +5,7 @@ namespace Dpb\Package\TaskMS\Application\UseCase\Tasks;
 use Dpb\Package\TaskMS\Application\Factories\Tasks\TaskAssigneeFactory;
 use Dpb\Package\TaskMS\Application\Factories\Tasks\TaskSubjectFactory;
 use Dpb\Package\Tasks\Entities\Task;
+use Dpb\Package\Tasks\Repositories\TaskGroupRepositoryInterface;
 use Dpb\Package\Tasks\Repositories\TaskRepositoryInterface;
 use Dpb\Package\Tasks\Services\UpdateTaskService;
 
@@ -13,12 +14,15 @@ class UpdateTaskUseCase
     public function __construct(
         private UpdateTaskService $updateSvc,
         private TaskRepositoryInterface $repository,
+        private TaskGroupRepositoryInterface $tgRepo,
         private TaskSubjectFactory $subjectFactory,
         private TaskAssigneeFactory $assigneeFactory,
     ) {}
 
     public function execute(string $id, array $data): ?Task
     {
+logger($data);
+
         // dd($data);
         $task = $this->repository->findById($id);
 
@@ -38,8 +42,12 @@ class UpdateTaskUseCase
             $task->updateDescription($data['description']);
         }
 
-        if (array_key_exists('group_id', $data)) {
-            $task->assignGroupId($data['group_id']);
+        // if (array_key_exists('group_id', $data)) {
+        //     $task->assignGroupId($data['group_id']);
+        // }        
+
+        if (array_key_exists('group_id', $data)) {            
+            $task->assignTaskGroup($this->tgRepo->findById($data['group_id']));
         }        
 
         if (array_key_exists('subject_id', $data)) {
@@ -52,6 +60,8 @@ class UpdateTaskUseCase
             $task->assignTo($assignee);
         }         
         
+        // update task items
+
         return $this->updateSvc->handle($task);
     }
 }

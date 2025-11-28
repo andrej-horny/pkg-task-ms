@@ -12,7 +12,7 @@ class TaskGroupMapper
     {
         return new TaskGroup(
             $model->id,
-            $model->code,
+            $model->uri,
             $model->title,
             $model->description,
         );
@@ -21,7 +21,7 @@ class TaskGroupMapper
     public function toEloquent(TaskGroup $taskGroup): EloquentTaskGroup
     {
         $model = EloquentTaskGroup::firstOrNew(['id' => $taskGroup->id()]);
-        $model->code = $taskGroup->code();
+        $model->uri = $taskGroup->uri();
         $model->title = $taskGroup->title();
         $model->description = $taskGroup->description();
         return $model;

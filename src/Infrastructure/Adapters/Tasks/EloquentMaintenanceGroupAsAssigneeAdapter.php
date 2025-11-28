@@ -5,7 +5,7 @@ namespace Dpb\Package\TaskMS\Infrastructure\Adapters\Tasks;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Fleet\EloquentMaintenanceGroup;
 use Dpb\Package\Tasks\Contracts\AssigneeInterface;
 
-class EloquentMaintenanceGroupAsTaskAssigneeAdapter implements AssigneeInterface
+class EloquentMaintenanceGroupAsAssigneeAdapter implements AssigneeInterface
 {
     public function __construct(private EloquentMaintenanceGroup $maintenanceGroup) {}
 

@@ -25,8 +25,8 @@ class UpdateTicketTypeUseCase
             $task->rename($data['title']); 
         }
 
-        if (array_key_exists('code', $data)) {
-            $task->updateCode($data['code']);
+        if (array_key_exists('uri', $data)) {
+            $task->updateUri($data['uri']);
         }
 
         return $this->updateSvc->handle($task);

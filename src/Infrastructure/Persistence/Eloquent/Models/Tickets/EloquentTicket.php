@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Contracts\Tickets\EloquentSubjectInterface as EloquentTicketSubjectInterface;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 
 class EloquentTicket extends Model
 {

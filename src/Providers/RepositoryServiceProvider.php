@@ -41,7 +41,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(Inspections\Repositories\MeasurementUnitRepositoryInterface::class, TmsRepo\Inspections\MeasurementUnitRepositoryEloquent::class);    
         // tasks
         $this->app->bind(Tasks\Repositories\TaskGroupRepositoryInterface::class, TmsRepo\Tasks\TaskGroupRepositoryEloquent::class);    
+        $this->app->bind(Tasks\Repositories\TaskItemGroupRepositoryInterface::class, TmsRepo\Tasks\TaskItemGroupRepositoryEloquent::class);    
         $this->app->bind(Tasks\Repositories\TaskRepositoryInterface::class, TmsRepo\Tasks\TaskRepositoryEloquent::class);    
+        $this->app->bind(Tasks\Repositories\PlaceOfOccurrenceRepositoryInterface::class, TmsRepo\Tasks\PlaceOfOccurrenceRepositoryEloquent::class);    
         // tickets
         $this->app->bind(Tickets\Repositories\TicketTypeRepositoryInterface::class, TmsRepo\Tickets\TicketTypeRepositoryEloquent::class);    
         $this->app->bind(Tickets\Repositories\TicketRepositoryInterface::class, TmsRepo\Tickets\TicketRepositoryEloquent::class);    

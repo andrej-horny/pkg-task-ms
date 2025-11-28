@@ -17,7 +17,7 @@ class CreateTaskGroupUseCase
     {
         $taskGroup = new TaskGroup(
             $this->idGenerator->generate(),
-            $data['code'],
+            $data['uri'],
             $data['title'] ?? null,
             $data['description'] ?? null,
         );

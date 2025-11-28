@@ -1,13 +1,13 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tickets;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 
-class EloquentTicketType extends Model
+class EloquentPlaceOfOccurrence extends Model
 {
     use SoftDeletes;
 
@@ -22,19 +22,20 @@ class EloquentTicketType extends Model
     protected $fillable = [
         'id',
         'uri',
-        'title',       
+        'title',
+        'description',
     ];
 
     public function getTable()
     {
-        return config('pkg-task-ms.table_prefix') . 'ticket_types';
-    }    
+        return config('pkg-task-ms.table_prefix') . 'places_of_occurrence';
+    }     
 
     public function scopeByUri(Builder $query, string|array $uri)
     {
         // cast input to array
         $uri = Arr::wrap($uri);
 
-        $query->whereIn('uri', $uri);
-    }     
+        $query->whereIn('uri', $uri);        
+    }    
 }

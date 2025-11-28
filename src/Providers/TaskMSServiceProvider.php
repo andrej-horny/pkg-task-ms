@@ -23,20 +23,14 @@ class TaskMSServiceProvider extends PackageServiceProvider
         $package
             ->name('pkg-task-ms')
             ->hasConfigFile()
-            ->hasMigrations([
-                '0001_create_tasks_tables',
-            ])
+            // ->discoversMigrations(true, config('pkg-task-ms.migrations_path'))
+            ->discoversMigrations(true, 'src/Infrastructure/Persistence/Migrations')
+            ->runsMigrations()
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
-                    ->publishMigrations()
-                    ->publishConfigFile()
-                    ->askToRunMigrations()
-                    ->endWith(function () {
-                        // Artisan::call('db:seed', [
-                        //     '--class' => \Dpb\Packages\Tasks\Database\Seeders\DatabaseSeeder::class,
-                        //     '--force' => true,
-                        // ]);
-                    });
+                ->publishConfigFile()
+                // ->publishMigrations()
+                ->askToRunMigrations();
             });
     }
 

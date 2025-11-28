@@ -36,20 +36,20 @@ class TaskGroupRepositoryEloquent implements TaskGroupRepositoryInterface
             ->toArray();
     }
 
-    public function findByCode(string $code): ?TaskGroup
+    public function findByUri(string $uri): ?TaskGroup
     {
         $model = $this->eloquentModel
-            ->where('code', '=', $code)
+            ->where('uri', '=', $uri)
             ->first();
         
             return $this->mapper->toDomain($model);
     }
 
-    public function byCode(string|array $code): ?array
+    public function byUri(string|array $uri): ?array
     {
-        $code = Arr::wrap($code);
+        $uri = Arr::wrap($uri);
 
-        return $this->eloquentModel->whereIn('code', $code)
+        return $this->eloquentModel->whereIn('uri', $uri)
             ->get()
             ->map(fn($m) => $this->mapper->toDomain($m))
             ->toArray();

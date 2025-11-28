@@ -1,28 +1,28 @@
 <?php
 
-namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Tickets;
+namespace Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Repositories\Tasks;
 
-use Dpb\Package\Tickets\Entities\TicketType;
-use Dpb\Package\Tickets\Repositories\TicketTypeRepositoryInterface;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tasks\PlaceOfOccurrenceMapper;
+use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tasks\EloquentPlaceOfOccurrence;
+use Dpb\Package\Tasks\Entities\PlaceOfOccurrence;
+use Dpb\Package\Tasks\Repositories\PlaceOfOccurrenceRepositoryInterface;
 use Illuminate\Support\Arr;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Mappings\Tickets\TicketTypeMapper;
-use Dpb\Package\TaskMS\Infrastructure\Persistence\Eloquent\Models\Tickets\EloquentTicketType;
 
-class TicketTypeRepositoryEloquent implements TicketTypeRepositoryInterface
+class PlaceOfOccurrenceRepositoryEloquent implements PlaceOfOccurrenceRepositoryInterface
 {
     public function __construct(
-        private TicketTypeMapper $mapper,
-        private EloquentTicketType $eloquentModel
+        private PlaceOfOccurrenceMapper $mapper,
+        private EloquentPlaceOfOccurrence $eloquentModel
         ) {}
 
-    public function save(TicketType $taskGroup): TicketType
+    public function save(PlaceOfOccurrence $taskGroup): PlaceOfOccurrence
     {
         $model = $this->mapper->toEloquent($taskGroup);
         $model->save();
         return $this->mapper->toDomain($model);
     }
 
-    public function findById(string $id): ?TicketType
+    public function findById(string $id): ?PlaceOfOccurrence
     {
         $model = $this->eloquentModel->findOrFail($id);
 
@@ -36,7 +36,7 @@ class TicketTypeRepositoryEloquent implements TicketTypeRepositoryInterface
             ->toArray();
     }
 
-    public function findByUri(string $uri): ?TicketType
+    public function findByUri(string $uri): ?PlaceOfOccurrence
     {
         $model = $this->eloquentModel
             ->where('uri', '=', $uri)

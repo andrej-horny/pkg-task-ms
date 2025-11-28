@@ -34,6 +34,7 @@ class EloquentTask extends Model
         'subject_type',
         'assigned_to_id',
         'assigned_to_type',
+        'place_of_occurence_id',
     ];
 
     public function getTable()
@@ -62,6 +63,11 @@ class EloquentTask extends Model
     {
         return $this->belongsTo(EloquentTaskGroup::class, "group_id");
     }     
+
+    public function placeOfOccurrence(): BelongsTo
+    {
+        return $this->belongsTo(EloquentPlaceOfOccurrence::class, "place_of_occurence_id");
+    }   
 
     public function subject(): MorphTo
     {
@@ -94,5 +100,10 @@ class EloquentTask extends Model
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, "author_id");
+    }    
+
+    public function taskItems(): HasMany
+    {
+        return $this->hasMany(EloquentTaskItem::class, "task_id");
     }    
 }

@@ -3,11 +3,11 @@
 namespace Dpb\Package\TaskMS\Application\UseCase\Tasks;
 
 use App\Models\IncidentAssignment;
+use DateTimeImmutable;
 use Dpb\Package\TaskMS\Infrastructure\Services\LaravelIdGenerator;
 use Dpb\Package\Tasks\Entities\Task;
 use Dpb\Package\Tasks\Repositories\TaskGroupRepositoryInterface;
 use Dpb\Package\Tasks\Services\CreateTaskService;
-use Illuminate\Support\Carbon;
 
 class CreateTaskFromIncidentUseCase
 {
@@ -21,12 +21,14 @@ class CreateTaskFromIncidentUseCase
     {
         $task = new Task(
             $this->idGenerator->generate(),
-            Carbon::now(),
+            new DateTimeImmutable('now'),
              null,
             $incidentAssignment->incident->description,
-            $this->taskGroupRepo->findByCode($incidentAssignment->incident->type->code)->id(),
+            $this->taskGroupRepo->findByUri($incidentAssignment->incident->type->code)->id(),
             null,
-            null
+            null,
+            null,
+            auth()->user()->id,
         );
 
         return $this->createSvc->handle($task);
